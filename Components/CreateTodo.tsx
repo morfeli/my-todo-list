@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { Input } from "./Shadcn/Input";
 import { Button } from "./Shadcn/Button";
@@ -7,6 +8,7 @@ import { Todo } from "@/app/types";
 type CreateTodoProps = {
   handleNewTodoAction: (input: Todo) => void;
 };
+
 export function CreateTodo({ handleNewTodoAction }: CreateTodoProps) {
   const [newTodo, setNewTodo] = useState<{
     title: string;
@@ -29,40 +31,44 @@ export function CreateTodo({ handleNewTodoAction }: CreateTodoProps) {
 
     const data: Todo = await response.json();
     handleNewTodoAction(data);
+    setNewTodo({ title: "", description: "" }); // Reset form after submission
   };
 
   return (
-    <div className="flex  space-x-2 mb-4">
-      <div className="flex space-x-2">
+    <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full max-w-[350px] sm:max-w-none mx-auto">
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 flex-grow">
         <Input
           type="text"
           placeholder="Enter a new todo"
           name="title"
+          value={newTodo.title}
           onChange={(e) =>
             setNewTodo((curr) => ({
+              ...curr,
               title: e.target.value,
-              description: curr.description,
             }))
           }
+          className="w-full"
         />
         <Input
           type="text"
           placeholder="Enter a description"
           name="description"
+          value={newTodo.description}
           onChange={(e) =>
             setNewTodo((curr) => ({
-              title: curr.title,
+              ...curr,
               description: e.target.value,
             }))
           }
+          className="w-full"
         />
       </div>
-
       <Button
-        className="bg-blue-500 px-10 rounded-lg hover:bg-blue-600"
+        className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
         onClick={postNewTodo}
       >
-        Add
+        Add Todo
       </Button>
     </div>
   );
